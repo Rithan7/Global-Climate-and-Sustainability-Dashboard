@@ -42,12 +42,11 @@ TOP = ["United States","China","India","Germany","Brazil",
 countries_list = sorted(co2_df[co2_df["country"].isin(TOP)]["country"].unique())
 DEFAULT = ["United States","China","India","Germany"]
 
-# ── "Cyber Emerald & Electric Cyan" Color Palette ──────────────────────────────
+# ── "Cyber Emerald & Electric Cyan" Theme Palette ──────────────────────────────
 BG          = "#070a13"   # Deepest obsidian night background
 CARD_BG     = "#0f172a"   # Deep slate card surface
 CARD_BG_2   = "#1e293b"   # Lighter slate surface for KPI cards
 BORDER      = "#334155"   # Visible crisp slate border
-BORDER_GLOW = "#10b981"   # Emerald highlight border
 TEXT_PRI    = "#ffffff"   # Pure white high contrast text
 TEXT_SEC    = "#94a3b8"   # Readable slate sub-text
 TEXT_MUTED  = "#cbd5e1"   # Light slate text
@@ -225,7 +224,7 @@ KPI_VALUE = {
 # ── App ────────────────────────────────────────────────────────────────────────
 app = Dash(__name__)
 
-# Complete custom CSS shell override
+# Master CSS Shell with complete component dark overrides
 app.index_string = """
 <!DOCTYPE html>
 <html>
@@ -264,50 +263,67 @@ app.index_string = """
             box-shadow: 0 12px 30px rgba(6, 182, 212, 0.2) !important;
         }
 
-        /* High Visibility Dropdown Theming */
-        .Select-control, div[class*="-control"] {
+        /* FORCE DARK THEME ON REACT-SELECT & DROPDOWN CONTAINERS */
+        .Select, .Select-control, .Select-menu-outer, .Select-value, .Select-input, .Select-placeholder,
+        div[class*="-control"], div[class*="-ValueContainer"], div[class*="-IndicatorsContainer"],
+        div[class*="-Input"], div[class*="-singleValue"] {
             background-color: #1e293b !important;
-            border: 1.5px solid #334155 !important;
-            border-radius: 10px !important;
+            border-color: #334155 !important;
             color: #ffffff !important;
+            border-radius: 10px !important;
             min-height: 44px !important;
         }
-        div[class*="-menu"] {
-            background-color: #1e293b !important;
-            border: 1.5px solid #334155 !important;
-            box-shadow: 0 14px 35px rgba(0,0,0,0.6) !important;
-            border-radius: 10px !important;
+
+        div[class*="-placeholder"] {
+            color: #94a3b8 !important;
         }
-        div[class*="-option"] {
-            background-color: #1e293b !important;
-            color: #f8fafc !important;
-            padding: 12px 16px !important;
-            font-size: 13px !important;
+
+        div[class*="-Input"] input, input {
+            color: #ffffff !important;
         }
-        div[class*="-option"]:hover, div[class*="-option"][class*="-isFocused"] {
-            background-color: #334155 !important;
-            color: #38bdf8 !important;
-        }
+
         div[class*="-multiValue"] {
             background-color: #064e3b !important;
-            border: 1px solid #10b981 !important;
+            border: 1.5px solid #10b981 !important;
             border-radius: 6px !important;
         }
+
         div[class*="-multiValueLabel"] {
             color: #34d399 !important;
             font-weight: 700 !important;
-            font-size: 12px !important;
+            font-size: 13px !important;
         }
+
         div[class*="-multiValueRemove"]:hover {
             background-color: #991b1b !important;
             color: #fca5a5 !important;
         }
-        div[class*="-singleValue"], div[class*="-Input"] input { color: #ffffff !important; }
-        div[class*="-placeholder"] { color: #94a3b8 !important; }
 
-        /* ABSOLUTE HIGH VISIBILITY RANGE SLIDER MARKS & TRACK */
+        /* OPTIONS LIST */
+        div[class*="-menu"] {
+            background-color: #0f172a !important;
+            border: 1.5px solid #334155 !important;
+            box-shadow: 0 14px 35px rgba(0,0,0,0.8) !important;
+            border-radius: 10px !important;
+            z-index: 9999 !important;
+        }
+
+        div[class*="-option"] {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            padding: 12px 16px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+        }
+
+        div[class*="-option"]:hover, div[class*="-option"][class*="-isFocused"] {
+            background-color: #1e293b !important;
+            color: #38bdf8 !important;
+        }
+
+        /* ABSOLUTE VISIBILITY RANGE SLIDER */
         .rc-slider {
-            padding: 12px 0 24px 0 !important;
+            padding: 12px 0 28px 0 !important;
         }
         .rc-slider-rail {
             background-color: #334155 !important;
@@ -322,16 +338,16 @@ app.index_string = """
         .rc-slider-handle {
             border: 3px solid #ffffff !important;
             background-color: #06b6d4 !important;
-            width: 20px !important;
-            height: 20px !important;
-            margin-top: -6px !important;
-            box-shadow: 0 0 14px rgba(6, 182, 212, 0.9) !important;
+            width: 22px !important;
+            height: 22px !important;
+            margin-top: -7px !important;
+            box-shadow: 0 0 16px rgba(6, 182, 212, 1) !important;
             opacity: 1 !important;
         }
         .rc-slider-handle:hover, .rc-slider-handle:active {
             border-color: #ffffff !important;
             background-color: #10b981 !important;
-            box-shadow: 0 0 18px rgba(16, 185, 129, 1) !important;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 1) !important;
         }
         .rc-slider-dot {
             border-color: #475569 !important;
@@ -345,29 +361,28 @@ app.index_string = """
             background-color: #06b6d4 !important;
         }
 
-        /* CRITICAL TICK MARKS OVERRIDE */
+        /* TICK MARKS OVERRIDE */
         .rc-slider-mark-text {
             color: #ffffff !important;
-            font-size: 13px !important;
-            font-weight: 700 !important;
-            margin-top: 10px !important;
+            font-size: 14px !important;
+            font-weight: 800 !important;
+            margin-top: 14px !important;
             opacity: 1 !important;
             visibility: visible !important;
             font-family: 'Inter', sans-serif !important;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9) !important;
         }
         .rc-slider-mark-text-active {
             color: #38bdf8 !important;
-            font-weight: 800 !important;
+            font-weight: 900 !important;
             opacity: 1 !important;
-            visibility: visible !important;
         }
-        .rc-slider-tooltip-inner {
-            background-color: #1e293b !important;
-            color: #ffffff !important;
-            border: 1px solid #06b6d4 !important;
-            font-weight: 700 !important;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.5) !important;
+        .rc-slider-tooltip, .rc-slider-tooltip-inner, div[class*="-tooltip"] {
+            background-color: #0f172a !important;
+            color: #38bdf8 !important;
+            border: 1.5px solid #06b6d4 !important;
+            font-weight: 800 !important;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.7) !important;
         }
     </style>
 </head>
@@ -465,14 +480,16 @@ app.layout = html.Div(
                         html.Label("Year Range Timeline",
                                    style={"fontSize":"13px","color":"#ffffff",
                                           "fontWeight":"700"}),
-                        html.Span("1990 — 2022", style={
-                            "backgroundColor":"#1e293b",
+                        html.Span("2000 — 2022", id="year-badge", style={
+                            "backgroundColor":"#0f172a",
                             "color":"#38bdf8",
-                            "border":"1px solid #334155",
-                            "padding":"2px 10px",
-                            "borderRadius":"6px",
-                            "fontSize":"12px",
-                            "fontWeight":"700"
+                            "border":"1.5px solid #06b6d4",
+                            "padding":"4px 14px",
+                            "borderRadius":"8px",
+                            "fontSize":"13px",
+                            "fontWeight":"800",
+                            "letterSpacing":"1px",
+                            "boxShadow":"0 0 12px rgba(6, 182, 212, 0.3)"
                         })
                     ]),
                     dcc.RangeSlider(
@@ -482,8 +499,8 @@ app.layout = html.Div(
                                 "label": str(y),
                                 "style": {
                                     "color": "#ffffff",
-                                    "fontSize": "13px",
-                                    "fontWeight": "700"
+                                    "fontSize": "14px",
+                                    "fontWeight": "800"
                                 }
                             }
                             for y in range(1990, 2023, 5)
@@ -542,6 +559,7 @@ app.layout = html.Div(
     Output("kpi-renew","children"),
     Output("kpi-total","children"),
     Output("kpi-span","children"),
+    Output("year-badge","children"),
     Input("dd","value"),
     Input("sl","value"),
 )
@@ -550,7 +568,8 @@ def update(countries, yr):
         countries = DEFAULT
     fig1, fig2, fig3 = make_charts(countries, yr[0], yr[1])
     n, co2v, renewv, totalv, spanv = make_kpis(countries, yr[0], yr[1])
-    return fig1, fig2, fig3, n, co2v, renewv, totalv, spanv
+    badge_str = f"{yr[0]} — {yr[1]}"
+    return fig1, fig2, fig3, n, co2v, renewv, totalv, spanv, badge_str
 
 # ── Run Server ─────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
