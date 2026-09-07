@@ -224,7 +224,7 @@ KPI_VALUE = {
 # ── App ────────────────────────────────────────────────────────────────────────
 app = Dash(__name__)
 
-# Custom HTML template where CSS stylesheet block is placed LAST in footer to override all Dash defaults
+# Master CSS Shell with targeted overrides for options list, labels, and header bars
 app.index_string = """
 <!DOCTYPE html>
 <html>
@@ -269,7 +269,7 @@ app.index_string = """
                 box-shadow: 0 12px 30px rgba(6, 182, 212, 0.2) !important;
             }
 
-            /* MASTER OVERRIDE FOR YEAR BADGE */
+            /* YEAR BADGE */
             #year-badge {
                 background-color: #0f172a !important;
                 color: #38bdf8 !important;
@@ -283,9 +283,11 @@ app.index_string = """
                 display: inline-block !important;
             }
 
-            /* MASTER OVERRIDES FOR DROPDOWN & MULTI-SELECT */
-            .Select, .Select-control, div[class*="-control"], div[class*="-ValueContainer"], div[class*="-value"] {
-                background-color: #1e293b !important;
+            /* MAIN DROPDOWN INPUT CONTAINER ("4 selected X ^") */
+            .Select, .Select-control, div[class*="-control"], div[class*="-ValueContainer"],
+            div[class*="-IndicatorsContainer"], div[class*="-value-wrapper"] {
+                background-color: #0f172a !important;
+                background: #0f172a !important;
                 border: 2px solid #334155 !important;
                 border-radius: 10px !important;
                 color: #ffffff !important;
@@ -293,6 +295,12 @@ app.index_string = """
                 box-shadow: none !important;
             }
 
+            div[class*="-value-wrapper"] *, div[class*="-singleValue"], div[class*="-placeholder"] {
+                color: #ffffff !important;
+                font-weight: 700 !important;
+            }
+
+            /* SELECTED PILLS ("4 selected") */
             div[class*="-multiValue"], .Select-value {
                 background-color: #064e3b !important;
                 border: 1.5px solid #10b981 !important;
@@ -317,45 +325,75 @@ app.index_string = """
                 color: #ffffff !important;
             }
 
-            /* SEARCH INPUT INSIDE DROPDOWN */
-            .Select-input input, div[class*="-Input"] input, input[type="text"], input {
-                background-color: #0f172a !important;
-                color: #ffffff !important;
-                border: 1.5px solid #06b6d4 !important;
-                border-radius: 6px !important;
-                padding: 8px 12px !important;
-                font-weight: 700 !important;
-                font-size: 14px !important;
-            }
-
-            /* DROPDOWN MENU OPTIONS LIST */
+            /* DROPDOWN MENU CONTAINER */
             .Select-menu-outer, div[class*="-menu"] {
                 background-color: #0f172a !important;
                 border: 2px solid #06b6d4 !important;
                 border-radius: 10px !important;
-                box-shadow: 0 14px 35px rgba(0,0,0,0.95) !important;
+                box-shadow: 0 16px 40px rgba(0,0,0,0.95) !important;
                 margin-top: 6px !important;
                 z-index: 99999 !important;
+                overflow: hidden !important;
             }
 
-            .Select-option, div[class*="-option"] {
-                background-color: #0f172a !important;
+            /* SEARCH INPUT INSIDE DROPDOWN */
+            .Select-input input, div[class*="-Input"] input, input[type="text"], input {
+                background-color: #1e293b !important;
                 color: #ffffff !important;
+                border: 2px solid #06b6d4 !important;
+                border-radius: 8px !important;
+                padding: 10px 14px !important;
                 font-weight: 700 !important;
                 font-size: 14px !important;
-                padding: 12px 16px !important;
-                border-bottom: 1px solid #1e293b !important;
             }
 
-            .Select-option:hover, .Select-option.is-focused, div[class*="-option"]:hover, div[class*="-option"][class*="-isFocused"] {
+            /* SELECT ALL / DESELECT ALL HEADER BAR */
+            div[class*="-SelectAll"], div[class*="-header"], div[class*="-actions"],
+            .Select-menu-outer > div:first-child, div[class*="-menu"] > div:first-child {
+                background-color: #1e293b !important;
+                color: #38bdf8 !important;
+                border-bottom: 1.5px solid #334155 !important;
+                padding: 10px 14px !important;
+            }
+
+            div[class*="-SelectAll"] button, div[class*="-SelectAll"] a,
+            div[class*="-SelectAll"] span, div[class*="-header"] * {
+                color: #38bdf8 !important;
+                font-weight: 800 !important;
+                font-size: 13px !important;
+            }
+
+            /* MASTER OVERRIDE FOR ALL NESTED COUNTRY LABELS & CHECKBOXES IN DROPDOWN OPTIONS */
+            div[class*="-option"], div[class*="-option"] *, .Select-option, .Select-option * {
+                background-color: #0f172a !important;
+                color: #ffffff !important;
+                font-size: 14px !important;
+                font-weight: 700 !important;
+                letter-spacing: 0.3px !important;
+            }
+
+            /* HOVER STATE FOR COUNTRY OPTIONS */
+            div[class*="-option"]:hover, div[class*="-option"]:hover *,
+            .Select-option:hover, .Select-option:hover * {
                 background-color: #1e293b !important;
                 color: #38bdf8 !important;
             }
 
-            .Select-option.is-selected, div[class*="-option"][class*="-isSelected"] {
+            /* CHECKED / SELECTED COUNTRY OPTIONS */
+            div[class*="-option"][class*="-isSelected"], div[class*="-option"][class*="-isSelected"] *,
+            .Select-option.is-selected, .Select-option.is-selected * {
                 background-color: #064e3b !important;
                 color: #34d399 !important;
                 font-weight: 800 !important;
+            }
+
+            /* CHECKBOX CUSTOM STYLING */
+            input[type="checkbox"] {
+                accent-color: #10b981 !important;
+                width: 18px !important;
+                height: 18px !important;
+                cursor: pointer !important;
+                margin-right: 8px !important;
             }
 
             /* RANGE SLIDER TICK MARKS & TRACK */
@@ -592,5 +630,5 @@ def update(countries, yr):
 
 # ── Run Server ─────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    print("\n[READY] Dashboard ready -> http://127.0.0.1:8090\n")
-    app.run(port=8090, debug=False)
+    print("\n[READY] Dashboard ready -> http://127.0.0.1:8100\n")
+    app.run(port=8100, debug=False)
