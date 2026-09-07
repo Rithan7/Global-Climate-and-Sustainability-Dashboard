@@ -224,7 +224,7 @@ KPI_VALUE = {
 # ── App ────────────────────────────────────────────────────────────────────────
 app = Dash(__name__)
 
-# Master CSS Shell with complete component dark overrides
+# Custom HTML template where CSS stylesheet block is placed LAST in footer to override all Dash defaults
 app.index_string = """
 <!DOCTYPE html>
 <html>
@@ -233,158 +233,8 @@ app.index_string = """
     <title>Global Climate & Sustainability Dashboard</title>
     {%favicon%}
     {%css%}
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌍</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        html, body {
-            background-color: #070a13 !important;
-            margin: 0;
-            padding: 0;
-            color: #ffffff;
-        }
-        * { font-family: 'Inter', system-ui, -apple-system, sans-serif; box-sizing: border-box; }
-
-        ::-webkit-scrollbar { width: 10px; height: 10px; }
-        ::-webkit-scrollbar-track { background: #070a13; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 6px; }
-        ::-webkit-scrollbar-thumb:hover { background: #10b981; }
-
-        .kpi-card { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-        .kpi-card:hover {
-            transform: translateY(-4px);
-            border-color: #10b981 !important;
-            box-shadow: 0 12px 28px rgba(16, 185, 129, 0.2) !important;
-        }
-
-        .chart-card { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-        .chart-card:hover {
-            border-color: #06b6d4 !important;
-            box-shadow: 0 12px 30px rgba(6, 182, 212, 0.2) !important;
-        }
-
-        /* FORCE DARK THEME ON REACT-SELECT & DROPDOWN CONTAINERS */
-        .Select, .Select-control, .Select-menu-outer, .Select-value, .Select-input, .Select-placeholder,
-        div[class*="-control"], div[class*="-ValueContainer"], div[class*="-IndicatorsContainer"],
-        div[class*="-Input"], div[class*="-singleValue"] {
-            background-color: #1e293b !important;
-            border-color: #334155 !important;
-            color: #ffffff !important;
-            border-radius: 10px !important;
-            min-height: 44px !important;
-        }
-
-        div[class*="-placeholder"] {
-            color: #94a3b8 !important;
-        }
-
-        div[class*="-Input"] input, input {
-            color: #ffffff !important;
-        }
-
-        div[class*="-multiValue"] {
-            background-color: #064e3b !important;
-            border: 1.5px solid #10b981 !important;
-            border-radius: 6px !important;
-        }
-
-        div[class*="-multiValueLabel"] {
-            color: #34d399 !important;
-            font-weight: 700 !important;
-            font-size: 13px !important;
-        }
-
-        div[class*="-multiValueRemove"]:hover {
-            background-color: #991b1b !important;
-            color: #fca5a5 !important;
-        }
-
-        /* OPTIONS LIST */
-        div[class*="-menu"] {
-            background-color: #0f172a !important;
-            border: 1.5px solid #334155 !important;
-            box-shadow: 0 14px 35px rgba(0,0,0,0.8) !important;
-            border-radius: 10px !important;
-            z-index: 9999 !important;
-        }
-
-        div[class*="-option"] {
-            background-color: #0f172a !important;
-            color: #f8fafc !important;
-            padding: 12px 16px !important;
-            font-size: 13px !important;
-            font-weight: 600 !important;
-        }
-
-        div[class*="-option"]:hover, div[class*="-option"][class*="-isFocused"] {
-            background-color: #1e293b !important;
-            color: #38bdf8 !important;
-        }
-
-        /* ABSOLUTE VISIBILITY RANGE SLIDER */
-        .rc-slider {
-            padding: 12px 0 28px 0 !important;
-        }
-        .rc-slider-rail {
-            background-color: #334155 !important;
-            height: 8px !important;
-            border-radius: 4px !important;
-        }
-        .rc-slider-track {
-            background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%) !important;
-            height: 8px !important;
-            border-radius: 4px !important;
-        }
-        .rc-slider-handle {
-            border: 3px solid #ffffff !important;
-            background-color: #06b6d4 !important;
-            width: 22px !important;
-            height: 22px !important;
-            margin-top: -7px !important;
-            box-shadow: 0 0 16px rgba(6, 182, 212, 1) !important;
-            opacity: 1 !important;
-        }
-        .rc-slider-handle:hover, .rc-slider-handle:active {
-            border-color: #ffffff !important;
-            background-color: #10b981 !important;
-            box-shadow: 0 0 20px rgba(16, 185, 129, 1) !important;
-        }
-        .rc-slider-dot {
-            border-color: #475569 !important;
-            background-color: #1e293b !important;
-            width: 12px !important;
-            height: 12px !important;
-            bottom: -2px !important;
-        }
-        .rc-slider-dot-active {
-            border-color: #38bdf8 !important;
-            background-color: #06b6d4 !important;
-        }
-
-        /* TICK MARKS OVERRIDE */
-        .rc-slider-mark-text {
-            color: #ffffff !important;
-            font-size: 14px !important;
-            font-weight: 800 !important;
-            margin-top: 14px !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-            font-family: 'Inter', sans-serif !important;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.9) !important;
-        }
-        .rc-slider-mark-text-active {
-            color: #38bdf8 !important;
-            font-weight: 900 !important;
-            opacity: 1 !important;
-        }
-        .rc-slider-tooltip, .rc-slider-tooltip-inner, div[class*="-tooltip"] {
-            background-color: #0f172a !important;
-            color: #38bdf8 !important;
-            border: 1.5px solid #06b6d4 !important;
-            font-weight: 800 !important;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.7) !important;
-        }
-    </style>
 </head>
 <body>
     {%app_entry%}
@@ -392,6 +242,185 @@ app.index_string = """
         {%config%}
         {%scripts%}
         {%renderer%}
+        <style>
+            html, body {
+                background-color: #070a13 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                color: #ffffff !important;
+            }
+            * { font-family: 'Inter', system-ui, -apple-system, sans-serif !important; box-sizing: border-box; }
+
+            ::-webkit-scrollbar { width: 10px; height: 10px; }
+            ::-webkit-scrollbar-track { background: #070a13; }
+            ::-webkit-scrollbar-thumb { background: #334155; border-radius: 6px; }
+            ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+
+            .kpi-card { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+            .kpi-card:hover {
+                transform: translateY(-4px);
+                border-color: #10b981 !important;
+                box-shadow: 0 12px 28px rgba(16, 185, 129, 0.2) !important;
+            }
+
+            .chart-card { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+            .chart-card:hover {
+                border-color: #06b6d4 !important;
+                box-shadow: 0 12px 30px rgba(6, 182, 212, 0.2) !important;
+            }
+
+            /* MASTER OVERRIDE FOR YEAR BADGE */
+            #year-badge {
+                background-color: #0f172a !important;
+                color: #38bdf8 !important;
+                border: 2px solid #06b6d4 !important;
+                padding: 6px 16px !important;
+                border-radius: 8px !important;
+                font-size: 14px !important;
+                font-weight: 800 !important;
+                letter-spacing: 1px !important;
+                box-shadow: 0 0 16px rgba(6, 182, 212, 0.4) !important;
+                display: inline-block !important;
+            }
+
+            /* MASTER OVERRIDES FOR DROPDOWN & MULTI-SELECT */
+            .Select, .Select-control, div[class*="-control"], div[class*="-ValueContainer"], div[class*="-value"] {
+                background-color: #1e293b !important;
+                border: 2px solid #334155 !important;
+                border-radius: 10px !important;
+                color: #ffffff !important;
+                min-height: 46px !important;
+                box-shadow: none !important;
+            }
+
+            div[class*="-multiValue"], .Select-value {
+                background-color: #064e3b !important;
+                border: 1.5px solid #10b981 !important;
+                border-radius: 6px !important;
+                color: #34d399 !important;
+            }
+
+            div[class*="-multiValueLabel"], .Select-value-label {
+                color: #34d399 !important;
+                font-weight: 800 !important;
+                font-size: 13px !important;
+                padding: 4px 8px !important;
+            }
+
+            div[class*="-multiValueRemove"], .Select-value-icon {
+                color: #34d399 !important;
+                border-left: 1px solid #10b981 !important;
+            }
+
+            div[class*="-multiValueRemove"]:hover, .Select-value-icon:hover {
+                background-color: #991b1b !important;
+                color: #ffffff !important;
+            }
+
+            /* SEARCH INPUT INSIDE DROPDOWN */
+            .Select-input input, div[class*="-Input"] input, input[type="text"], input {
+                background-color: #0f172a !important;
+                color: #ffffff !important;
+                border: 1.5px solid #06b6d4 !important;
+                border-radius: 6px !important;
+                padding: 8px 12px !important;
+                font-weight: 700 !important;
+                font-size: 14px !important;
+            }
+
+            /* DROPDOWN MENU OPTIONS LIST */
+            .Select-menu-outer, div[class*="-menu"] {
+                background-color: #0f172a !important;
+                border: 2px solid #06b6d4 !important;
+                border-radius: 10px !important;
+                box-shadow: 0 14px 35px rgba(0,0,0,0.95) !important;
+                margin-top: 6px !important;
+                z-index: 99999 !important;
+            }
+
+            .Select-option, div[class*="-option"] {
+                background-color: #0f172a !important;
+                color: #ffffff !important;
+                font-weight: 700 !important;
+                font-size: 14px !important;
+                padding: 12px 16px !important;
+                border-bottom: 1px solid #1e293b !important;
+            }
+
+            .Select-option:hover, .Select-option.is-focused, div[class*="-option"]:hover, div[class*="-option"][class*="-isFocused"] {
+                background-color: #1e293b !important;
+                color: #38bdf8 !important;
+            }
+
+            .Select-option.is-selected, div[class*="-option"][class*="-isSelected"] {
+                background-color: #064e3b !important;
+                color: #34d399 !important;
+                font-weight: 800 !important;
+            }
+
+            /* RANGE SLIDER TICK MARKS & TRACK */
+            .rc-slider {
+                padding: 12px 0 28px 0 !important;
+            }
+            .rc-slider-rail {
+                background-color: #334155 !important;
+                height: 8px !important;
+                border-radius: 4px !important;
+            }
+            .rc-slider-track {
+                background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%) !important;
+                height: 8px !important;
+                border-radius: 4px !important;
+            }
+            .rc-slider-handle {
+                border: 3px solid #ffffff !important;
+                background-color: #06b6d4 !important;
+                width: 22px !important;
+                height: 22px !important;
+                margin-top: -7px !important;
+                box-shadow: 0 0 16px rgba(6, 182, 212, 1) !important;
+                opacity: 1 !important;
+            }
+            .rc-slider-handle:hover, .rc-slider-handle:active {
+                border-color: #ffffff !important;
+                background-color: #10b981 !important;
+                box-shadow: 0 0 20px rgba(16, 185, 129, 1) !important;
+            }
+            .rc-slider-dot {
+                border-color: #475569 !important;
+                background-color: #1e293b !important;
+                width: 12px !important;
+                height: 12px !important;
+                bottom: -2px !important;
+            }
+            .rc-slider-dot-active {
+                border-color: #38bdf8 !important;
+                background-color: #06b6d4 !important;
+            }
+
+            .rc-slider-mark-text {
+                color: #ffffff !important;
+                font-size: 15px !important;
+                font-weight: 900 !important;
+                margin-top: 14px !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                font-family: 'Inter', sans-serif !important;
+                text-shadow: 0 2px 5px rgba(0,0,0,0.9) !important;
+            }
+            .rc-slider-mark-text-active {
+                color: #38bdf8 !important;
+                font-weight: 900 !important;
+                opacity: 1 !important;
+            }
+            .rc-slider-tooltip, .rc-slider-tooltip-inner, div[class*="-tooltip"] {
+                background-color: #0f172a !important;
+                color: #38bdf8 !important;
+                border: 1.5px solid #06b6d4 !important;
+                font-weight: 800 !important;
+                box-shadow: 0 6px 18px rgba(0,0,0,0.7) !important;
+            }
+        </style>
     </footer>
 </body>
 </html>
@@ -480,17 +509,7 @@ app.layout = html.Div(
                         html.Label("Year Range Timeline",
                                    style={"fontSize":"13px","color":"#ffffff",
                                           "fontWeight":"700"}),
-                        html.Span("2000 — 2022", id="year-badge", style={
-                            "backgroundColor":"#0f172a",
-                            "color":"#38bdf8",
-                            "border":"1.5px solid #06b6d4",
-                            "padding":"4px 14px",
-                            "borderRadius":"8px",
-                            "fontSize":"13px",
-                            "fontWeight":"800",
-                            "letterSpacing":"1px",
-                            "boxShadow":"0 0 12px rgba(6, 182, 212, 0.3)"
-                        })
+                        html.Span("2000 — 2022", id="year-badge")
                     ]),
                     dcc.RangeSlider(
                         id="sl", min=1990, max=2022, step=1, value=[2000,2022],
@@ -573,5 +592,5 @@ def update(countries, yr):
 
 # ── Run Server ─────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    print("\n[READY] Dashboard ready -> http://127.0.0.1:8055\n")
-    app.run(port=8055, debug=False)
+    print("\n[READY] Dashboard ready -> http://127.0.0.1:8090\n")
+    app.run(port=8090, debug=False)
