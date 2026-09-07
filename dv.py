@@ -1,7 +1,12 @@
 import os
+import sys
 import pandas as pd
 import plotly.express as px
 from dash import Dash, dcc, html, Input, Output
+
+# Force stdout encoding to UTF-8 for Windows consoles
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
 
 # ── Load data ──────────────────────────────────────────────────────────────────
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -11,15 +16,15 @@ def find_file(name):
     for folder in [SCRIPT_DIR, DOWNLOADS]:
         p = os.path.join(folder, name)
         if os.path.exists(p):
-            print(f"✅ {name} found at {p}")
+            print(f"[OK] {name} found at {p}")
             return p
     if name == "owid-co2-data.csv":
         url = "https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv"
-        print(f"🌐 Fetching {name} online from {url}")
+        print(f"[ONLINE] Fetching {name} online from {url}")
         return url
     elif name == "owid-energy-data.csv":
         url = "https://raw.githubusercontent.com/owid/energy-data/master/owid-energy-data.csv"
-        print(f"🌐 Fetching {name} online from {url}")
+        print(f"[ONLINE] Fetching {name} online from {url}")
         return url
     return None
 
@@ -29,8 +34,8 @@ def clean(df):
 co2_df    = clean(pd.read_csv(find_file("owid-co2-data.csv")))
 energy_df = clean(pd.read_csv(find_file("owid-energy-data.csv")))
 
-print(f"✅ CO2 rows: {len(co2_df)}")
-print(f"✅ Energy rows: {len(energy_df)}")
+print(f"[DATA] CO2 rows: {len(co2_df)}")
+print(f"[DATA] Energy rows: {len(energy_df)}")
 
 TOP = ["United States","China","India","Germany","Brazil",
        "United Kingdom","Russia","Japan","Canada","Australia"]
@@ -147,7 +152,7 @@ def make_kpis(countries, y0, y1):
 # Pre-build at startup so charts appear immediately on load
 f1, f2, f3 = make_charts(DEFAULT, 2000, 2022)
 kpi_vals = make_kpis(DEFAULT, 2000, 2022)
-print("✅ Charts built successfully")
+print("[OK] Charts built successfully")
 
 # ── Styles ─────────────────────────────────────────────────────────────────────
 CARD = {
@@ -393,5 +398,5 @@ def update(countries, yr):
 
 # ── Run ────────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    print("\n🌍 Dashboard ready → http://127.0.0.1:8050\n")
+    print("\n[READY] Dashboard ready -> http://127.0.0.1:8050\n")
     app.run(debug=False)
